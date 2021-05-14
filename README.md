@@ -71,3 +71,26 @@ You can view the reference docs for this pallet by running:
 ```
 cargo doc --open
 ```
+
+## Pallet design
+
+# In the following section we define the pallet design
+
+- Types
+- Trait
+  - Event
+  - Currency
+- Storage
+  - Domains map Vec<u8> => accountId
+- Calls
+  - claim
+  - send
+  - unregister
+- Events
+  - Claimed
+  - Sended
+  - Unregistered
+- Errors
+  - DomainAlreadyUsed
+  - AccountNotFound
+- Module
