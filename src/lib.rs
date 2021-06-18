@@ -2,7 +2,7 @@
 
 use frame_support::{decl_module, decl_storage, decl_event, decl_error, dispatch, traits::Get};
 use frame_system::ensure_signed;
-use frame_support::traits::{Currency, LockableCurrency, WithdrawReasons, ExistenceRequirement};
+use frame_support::traits::{Currency, LockableCurrency, ExistenceRequirement};
 use sp_std::vec::Vec;
 
 pub type BalanceOf<T> =
@@ -67,7 +67,8 @@ decl_module! {
 				Err(Error::<T>::DomainNotFound)?
 			}
 			let reciver = Domains::<T>::get(&domain);
-			T::Currency::transfer(&sender, &reciver, amount, ExistenceRequirement::KeepAlive);
+
+			T::Currency::transfer(&sender, &reciver, amount, ExistenceRequirement::KeepAlive)
 			Ok(())
 		}
 

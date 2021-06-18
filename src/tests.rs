@@ -1,23 +1,21 @@
 use crate::{Error, mock::*};
-use frame_support::{assert_ok, assert_noop};
-
-// #[test]
-// fn it_works_for_default_value() {
-// 	new_test_ext().execute_with(|| {
-// 		// Dispatch a signed extrinsic.
-// 		assert_ok!(TemplateModule::do_something(Origin::signed(1), 42));
-// 		// Read pallet storage and assert an expected result.
-// 		assert_eq!(TemplateModule::something(), Some(42));
-// 	});
-// }
+use frame_support::{assert_noop, assert_ok};
 
 #[test]
-fn correct_error_for_none_value() {
+fn it_can_claim_a_domain_name() {
 	new_test_ext().execute_with(|| {
-		// Ensure the expected error is thrown when no value is present.
-		// assert_noop!(
-		// 	TemplateModule::cause_error(Origin::signed(1)),
-		// 	Error::<Test>::NoneValue
-		// );
+		let domain = b"janislav.eth";
+		assert_ok!(Domain::register(Origin::signed(1), domain.to_vec()));
+		let expected = Domain::domains(domain.to_vec());
+		assert_eq!(expected, 1);
+	});
+}
+
+#[test]
+fn it_throws_an_not_found() {
+	new_test_ext().execute_with(|| {
+		let not_existing_domain = b"not_found.eth";
+		let e = Error::<Test>::DomainNotFound;
+		assert_noop!(Domain::send(Origin::signed(1), 50, not_existing_domain.to_vec()), e);
 	});
 }
