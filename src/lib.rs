@@ -9,19 +9,20 @@ pub type BalanceOf<T> =
 	<<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
 
 #[cfg(test)]
-mod mock;
-
-#[cfg(test)]
 mod tests;
 
 pub trait Config: frame_system::Config {
 	type Event: From<Event<Self>> + Into<<Self as frame_system::Config>::Event>;
-	type Currency: LockableCurrency<Self::AccountId, Moment = Self::BlockNumber>;
+	type Currency: Currency<Self::AccountId>;
 }
 
 decl_storage! {
 	trait Store for Module<T: Config> as TemplateModule {
 		Domains get(fn domains): map hasher(blake2_128_concat) Vec<u8> => T::AccountId;
+	}
+	add_extra_genesis {
+		build(|_config| {
+		})
 	}
 }
 
@@ -68,7 +69,7 @@ decl_module! {
 			}
 			let reciver = Domains::<T>::get(&domain);
 
-			T::Currency::transfer(&sender, &reciver, amount, ExistenceRequirement::KeepAlive)
+			T::Currency::transfer(&sender, &reciver, amount, ExistenceRequirement::KeepAlive);
 			Ok(())
 		}
 
