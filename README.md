@@ -1,12 +1,10 @@
-# Domain name pallet
+# Domainname pallet
 
-This is the repository of the domain name pallet.
+This is the repository of the domainname pallet.
 
 ## Purpose
 
-This pallet acts as a template for building other pallets.
-
-It currently allows a user to put a `u32` value into storage, which triggers a runtime event.
+This pallet gives you the possibility to extend a substrate chain by domain names. A user should have the possibility register a qualified name and use this name to receive funds from other users of the chain without the need of using an address.
 
 ## Dependencies
 
@@ -15,6 +13,7 @@ It currently allows a user to put a `u32` value into storage, which triggers a r
 This pallet depends on the following traits:
 
 - Currency
+- Event
 
 ### Pallets
 
@@ -29,7 +28,7 @@ To add this pallet to your runtime, simply include the following to your runtime
 ```TOML
 [dependencies.pallet-domainname]
 default_features = false
-git = 'https://github.com/substrate-developer-hub/substrate-pallet-template.git'
+git = 'https://github.com/Janislav/pallet-domainname.git'
 ```
 
 and update your runtime's `std` feature to include this pallet:
@@ -69,26 +68,3 @@ You can view the reference docs for this pallet by running:
 ```
 cargo doc --open
 ```
-
-## Pallet design
-
-# In the following section we define the pallet design
-
-- Types
-- Trait
-  - Event
-  - Currency
-- Storage
-  - Domains map Vec<u8> => accountId
-- Calls
-  - claim
-  - send
-  - unregister
-- Events
-  - Claimed
-  - Sended
-  - Unregistered
-- Errors
-  - DomainAlreadyUsed
-  - AccountNotFound
-- Module

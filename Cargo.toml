@@ -1,12 +1,12 @@
 [package]
 authors = ['Jan Börner<janboerner@icloud.com']
-description = 'FRAME pallet for domainname ussage on a blockchain.'
+description = 'FRAME pallet for simple domainname ussage.'
 edition = '2018'
-homepage = 'https://substrate.dev'
+homepage = 'https://github.com/Janislav/pallet-domainname'
 license = 'Unlicense'
 name = 'pallet-domainname'
-repository = 'https://github.com/substrate-developer-hub/substrate-node-template/'
-version = '3.0.0'
+repository = 'https://github.com/Janislav/pallet-domainname'
+version = '1.0.0'
 
 [package.metadata.docs.rs]
 targets = ['x86_64-unknown-linux-gnu']
