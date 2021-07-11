@@ -1,14 +1,12 @@
 use super::*;
 
 use crate as domainname;
-use std::cell::RefCell;
 use sp_core::H256;
 use frame_support::{
-    parameter_types, assert_ok, assert_noop, error::BadOrigin, unsigned::ValidateUnsigned,
+    parameter_types, assert_ok, assert_noop,
 };
 use sp_runtime::{
 	traits::{BlakeTwo256, IdentityLookup}, testing::Header,
-	testing::TestXt,
 };
 
 type UncheckedExtrinsic = frame_system::mocking::MockUncheckedExtrinsic<Test>;
@@ -70,7 +68,6 @@ impl pallet_balances::Config for Test {
 	type WeightInfo = ();
 }
 
-
 parameter_types! {
 	pub const DefaultDifficulty: u32 = 3;
 }
@@ -81,23 +78,13 @@ impl Config for Test {
     // type WeightInfo = ();
 }
 
-/// An extrinsic type used for tests.
-// pub type Extrinsic = TestXt<Call, ()>;
-
-// impl for Test {
-// 	type OverarchingCall = Call;
-// 	type Extrinsic = Extrinsic;
-// }
-
 // Build genesis storage according to the mock runtime.
 pub fn new_test_ext() -> sp_io::TestExternalities {
     let mut t = frame_system::GenesisConfig::default().build_storage::<Test>().unwrap();
 
     pallet_balances::GenesisConfig::<Test>{
-		balances: vec![(200, 500)],
+		balances: vec![(200, 500), (201, 400), (202, 50)],
     }.assimilate_storage(&mut t).unwrap();
-
-    // crate::GenesisConfig::default().assimilate_storage::<Test>(&mut t).unwrap();
 
     let mut t: sp_io::TestExternalities = t.into();
 
@@ -129,5 +116,37 @@ fn it_throws_an_not_found() {
 		let not_existing_domain = b"not_found.eth";
 		let e = Error::<Test>::DomainNotFound;
 		assert_noop!(Domain::send(Origin::signed(1), 50, not_existing_domain.to_vec()), e);
+	});
+}
+
+#[test]
+fn it_can_send_money_by_an_domain_name() {
+	new_test_ext().execute_with(|| {
+		let domain = b"janislav.eth";
+		assert_ok!(Domain::register(Origin::signed(200), domain.to_vec()));
+		assert_ok!(Domain::send(Origin::signed(201), 100, domain.to_vec()));
+		assert_eq!(Balances::total_balance(&200), 600);
+		assert_eq!(Balances::total_balance(&201), 300);
+	});
+}
+
+#[test]
+fn it_can_unregister_an_domain() {
+	new_test_ext().execute_with(|| {
+		let domain = b"janislav.eth";
+		assert_ok!(Domain::register(Origin::signed(200), domain.to_vec()));
+		//assert_eq!(last_event(), Event::kitties(RawEvent::KittySold(100, 200, 0, 400)));
+		assert_eq!(last_event(), Event::domainname(RawEvent::Registered(domain.to_vec(), 200)));
+		assert_ok!(Domain::unregister(Origin::signed(200), domain.to_vec()));
+		assert_eq!(last_event(), Event::domainname(RawEvent::Unregistered(domain.to_vec(), 200)));
+	});
+}
+
+#[test]
+fn it_fails_if_not_enough_balance() {
+	new_test_ext().execute_with(|| {
+		let domain = b"janislav.eth";
+		assert_ok!(Domain::register(Origin::signed(200), domain.to_vec()));
+		assert_noop!(Domain::send(Origin::signed(202), 100, domain.to_vec()), pallet_balances::Error::<Test>::InsufficientBalance);
 	});
 }

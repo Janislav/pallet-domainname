@@ -1,10 +1,6 @@
-# Substrate Pallet Template
+# Domain name pallet
 
-This is a template for a Substrate pallet which lives as its own crate so it can be imported into multiple runtimes. It is based on the ["template" pallet](https://github.com/paritytech/substrate/tree/master/bin/node-template/pallets/template) that is included with the [Substrate node template](https://github.com/paritytech/substrate/tree/master/bin/node-template).
-
-Check out the [HOWTO](HOWTO.md) to learn how to use this for your own runtime module.
-
-This README should act as a general template for distributing your pallet to others.
+This is the repository of the domain name pallet.
 
 ## Purpose
 
@@ -16,7 +12,9 @@ It currently allows a user to put a `u32` value into storage, which triggers a r
 
 ### Traits
 
-This pallet does not depend on any externally defined traits.
+This pallet depends on the following traits:
+
+- Currency
 
 ### Pallets
 
@@ -29,7 +27,7 @@ This pallet does not depend on any other FRAME pallet or externally developed mo
 To add this pallet to your runtime, simply include the following to your runtime's `Cargo.toml` file:
 
 ```TOML
-[dependencies.pallet-template]
+[dependencies.pallet-domainname]
 default_features = false
 git = 'https://github.com/substrate-developer-hub/substrate-pallet-template.git'
 ```
@@ -39,7 +37,7 @@ and update your runtime's `std` feature to include this pallet:
 ```TOML
 std = [
     # --snip--
-    'pallet-template/std',
+    'pallet-domainname/std',
 ]
 ```
 
@@ -57,7 +55,7 @@ impl pallet_template::Config for Runtime {
 and include it in your `construct_runtime!` macro:
 
 ```rust
-TemplatePallet: pallet_template::{Module, Call, Storage, Event<T>},
+Domainname: pallet_domainname::{Module, Call, Storage, Event<T>},
 ```
 
 ### Genesis Configuration
